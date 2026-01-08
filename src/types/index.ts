@@ -4,3 +4,46 @@ export interface IApi {
     get<T extends object>(uri: string): Promise<T>;
     post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
 }
+
+// Интерфейсы для данных приложения
+export interface IProduct {
+    id: string;
+    description: string;
+    image: string;
+    title: string;
+    category: string;
+    price: number | null;
+}
+
+export type TPayment = 'card' | 'cash';
+
+export interface IBuyer {
+    payment: TPayment;
+    email: string;
+    phone: string;
+    address: string;
+}
+
+export interface IValidationErrors {
+    [key: string]: string;
+}
+
+// Интерфейсы для работы с сервером
+export interface IProductsResponse {
+    total: number;
+    items: IProduct[];
+}
+
+export interface IOrder {
+    payment: TPayment;
+    email: string;
+    phone: string;
+    address: string;
+    total: number;
+    items: string[];
+}
+
+export interface IOrderResult {
+    id: string;
+    total: number;
+}
