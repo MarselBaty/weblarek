@@ -53,27 +53,32 @@ console.log('Общая стоимость после удаления:', basket
 console.log('\n--- Тестирование Buyer ---');
 console.log('Пустые данные покупателя:', buyer.getBuyerData());
 
-// Проверяем валидацию пустых форм
-console.log('Ошибки валидации формы заказа (пустая):', buyer.validateOrderForm());
-console.log('Ошибки валидации формы контактов (пустая):', buyer.validateContactsForm());
-console.log('Форма заказа валидна (пустая):', buyer.isOrderFormValid());
-console.log('Форма контактов валидна (пустая):', buyer.isContactsFormValid());
+// Проверяем валидацию пустых данных
+console.log('Ошибки валидации (пустые данные):', buyer.validateBuyerData());
+console.log('Данные покупателя валидны (пустые):', buyer.isBuyerDataValid());
 
-// Заполняем данные покупателя
-buyer.setPayment('card');
-buyer.setAddress('Москва, ул. Тверская, д. 1');
-buyer.setEmail('test@example.com');
-buyer.setPhone('+7 (999) 123-45-67');
+// Заполняем данные покупателя через универсальный метод
+buyer.setBuyerData({
+    payment: 'card',
+    address: 'Москва, ул. Тверская, д. 1',
+    email: 'test@example.com',
+    phone: '+7 (999) 123-45-67'
+});
 
 console.log('Заполненные данные покупателя:', buyer.getBuyerData());
-console.log('Ошибки валидации формы заказа (заполненная):', buyer.validateOrderForm());
-console.log('Ошибки валидации формы контактов (заполненная):', buyer.validateContactsForm());
-console.log('Форма заказа валидна (заполненная):', buyer.isOrderFormValid());
-console.log('Форма контактов валидна (заполненная):', buyer.isContactsFormValid());
+console.log('Ошибки валидации (заполненные данные):', buyer.validateBuyerData());
+console.log('Данные покупателя валидны (заполненные):', buyer.isBuyerDataValid());
 
 // Тестируем частичное обновление данных
 buyer.setBuyerData({ address: 'Санкт-Петербург, Невский проспект, д. 10' });
 console.log('Данные после частичного обновления:', buyer.getBuyerData());
+
+// Тестируем валидацию частично заполненных данных
+buyer.clearBuyerData();
+buyer.setBuyerData({ payment: 'cash', address: 'Москва' });
+console.log('Частично заполненные данные:', buyer.getBuyerData());
+console.log('Ошибки валидации (частично заполненные):', buyer.validateBuyerData());
+console.log('Данные валидны (частично заполненные):', buyer.isBuyerDataValid());
 
 // Очищаем данные
 buyer.clearBuyerData();

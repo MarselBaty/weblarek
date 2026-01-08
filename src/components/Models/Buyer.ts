@@ -6,22 +6,6 @@ export class Buyer {
     private phone: string = '';
     private email: string = '';
 
-    setPayment(payment: TPayment): void {
-        this.payment = payment;
-    }
-
-    setAddress(address: string): void {
-        this.address = address;
-    }
-
-    setPhone(phone: string): void {
-        this.phone = phone;
-    }
-
-    setEmail(email: string): void {
-        this.email = email;
-    }
-
     setBuyerData(data: Partial<IBuyer>): void {
         if (data.payment !== undefined) {
             this.payment = data.payment;
@@ -53,7 +37,7 @@ export class Buyer {
         this.email = '';
     }
 
-    validateOrderForm(): IValidationErrors {
+    validateBuyerData(): IValidationErrors {
         const errors: IValidationErrors = {};
 
         if (!this.payment) {
@@ -63,12 +47,6 @@ export class Buyer {
         if (!this.address.trim()) {
             errors.address = 'Необходимо указать адрес доставки';
         }
-
-        return errors;
-    }
-
-    validateContactsForm(): IValidationErrors {
-        const errors: IValidationErrors = {};
 
         if (!this.email.trim()) {
             errors.email = 'Необходимо указать email';
@@ -81,11 +59,7 @@ export class Buyer {
         return errors;
     }
 
-    isOrderFormValid(): boolean {
-        return Object.keys(this.validateOrderForm()).length === 0;
-    }
-
-    isContactsFormValid(): boolean {
-        return Object.keys(this.validateContactsForm()).length === 0;
+    isBuyerDataValid(): boolean {
+        return Object.keys(this.validateBuyerData()).length === 0;
     }
 }

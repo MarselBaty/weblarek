@@ -189,17 +189,11 @@ interface IValidationErrors {
 - `email: string` - email покупателя
 
 **Методы класса**:
-- `setPayment(payment: TPayment): void` - устанавливает способ оплаты
-- `setAddress(address: string): void` - устанавливает адрес доставки
-- `setPhone(phone: string): void` - устанавливает телефон
-- `setEmail(email: string): void` - устанавливает email
 - `setBuyerData(data: Partial<IBuyer>): void` - устанавливает данные покупателя (позволяет обновить только указанные поля)
 - `getBuyerData(): IBuyer` - возвращает все данные покупателя
 - `clearBuyerData(): void` - очищает все данные покупателя
-- `validateOrderForm(): IValidationErrors` - валидирует данные первого шага заказа (способ оплаты и адрес)
-- `validateContactsForm(): IValidationErrors` - валидирует данные второго шага заказа (email и телефон)
-- `isOrderFormValid(): boolean` - проверяет валидность данных первого шага заказа
-- `isContactsFormValid(): boolean` - проверяет валидность данных второго шага заказа
+- `validateBuyerData(): IValidationErrors` - валидирует все данные покупателя и возвращает объект с ошибками
+- `isBuyerDataValid(): boolean` - проверяет валидность всех данных покупателя
 
 ## Слой коммуникации
 
