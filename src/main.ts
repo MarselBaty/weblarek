@@ -145,9 +145,40 @@ events.on('order:open', () => {
     });
 });
 
+// Обновление состояния формы заказа
+events.on('order:ready', (formState: { valid: boolean, errors: string[] }) => {
+    const orderForm = modal.content.querySelector('.form') as HTMLFormElement;
+    if (orderForm) {
+        const submitButton = orderForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+        const errorsElement = orderForm.querySelector('.form__errors') as HTMLElement;
+        
+        submitButton.disabled = !formState.valid;
+        errorsElement.textContent = formState.errors.join('; ');
+    }
+});
+
 // Изменение формы заказа
 events.on('order:change', (data: { field: keyof typeof buyer, value: string }) => {
     buyer.setBuyerData({ [data.field]: data.value });
+    
+    // Проверяем валидность ТОЛЬКО данных заказа (способ оплаты и адрес)
+    const buyerData = buyer.getBuyerData();
+    const isValid = buyerData.payment && buyerData.address.trim() !== '';
+    
+    // Собираем ошибки только для полей заказа
+    const errors: string[] = [];
+    if (!buyerData.payment) {
+        errors.push('Не выбран способ оплаты');
+    }
+    if (!buyerData.address.trim()) {
+        errors.push('Необходимо указать адрес доставки');
+    }
+    
+    // Обновляем состояние формы
+    events.emit('order:ready', {
+        valid: isValid,
+        errors: errors
+    });
 });
 
 // Отправка формы заказа
@@ -163,9 +194,40 @@ events.on('order:submit', () => {
     });
 });
 
+// Обновление состояния формы контактов
+events.on('contacts:ready', (formState: { valid: boolean, errors: string[] }) => {
+    const contactsForm = modal.content.querySelector('.form') as HTMLFormElement;
+    if (contactsForm) {
+        const submitButton = contactsForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+        const errorsElement = contactsForm.querySelector('.form__errors') as HTMLElement;
+        
+        submitButton.disabled = !formState.valid;
+        errorsElement.textContent = formState.errors.join('; ');
+    }
+});
+
 // Изменение формы контактов
 events.on('contacts:change', (data: { field: keyof typeof buyer, value: string }) => {
     buyer.setBuyerData({ [data.field]: data.value });
+    
+    // Проверяем валидность ТОЛЬКО контактных данных (email и телефон)
+    const buyerData = buyer.getBuyerData();
+    const isValid = buyerData.email.trim() !== '' && buyerData.phone.trim() !== '';
+    
+    // Собираем ошибки только для контактных полей
+    const errors: string[] = [];
+    if (!buyerData.email.trim()) {
+        errors.push('Необходимо указать email');
+    }
+    if (!buyerData.phone.trim()) {
+        errors.push('Необходимо указать телефон');
+    }
+    
+    // Обновляем состояние формы контактов
+    events.emit('contacts:ready', {
+        valid: isValid,
+        errors: errors
+    });
 });
 
 // Отправка формы контактов
@@ -200,6 +262,11 @@ events.on('modal:open', () => {
 // Разблокировка прокрутки страницы при закрытии модального окна
 events.on('modal:close', () => {
     page.locked = false;
+});
+
+// Закрытие окна успешного заказа
+events.on('success:close', () => {
+    modal.close();
 });
 
 // Получение товаров с сервера
