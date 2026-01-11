@@ -3,7 +3,7 @@ import { IEvents } from '../base/Events';
 import { ensureElement } from '../../utils/utils';
 import { IFormState } from '../../types/index';
 
-export abstract class Form<T> extends Component<T> {
+export abstract class Form<T> extends Component<IFormState> {
     protected submitButton: HTMLButtonElement;
     protected errorsElement: HTMLElement;
 
