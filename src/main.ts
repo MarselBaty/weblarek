@@ -105,7 +105,7 @@ events.on('card:add', (item: IProduct) => {
 // Удаление товара из корзины
 events.on('card:remove', (item: IProduct) => {
     basket.removeItem(item);
-    // Не закрываем модальное окно при удалении из корзины
+    modal.close();
 });
 
 // Изменение корзины
@@ -187,17 +187,6 @@ events.on('basket:open', () => {
 // Открытие формы заказа
 events.on('order:open', () => {
     const buyerData = buyer.getBuyerData();
-    const errors = buyer.validateBuyerData();
-    
-    const orderErrors = [];
-    if (errors.payment) orderErrors.push(errors.payment);
-    if (errors.address) orderErrors.push(errors.address);
-    
-    const isOrderValid = !errors.payment && !errors.address;
-    
-    // Устанавливаем состояние формы через сеттеры
-    orderForm.valid = isOrderValid;
-    orderForm.errors = orderErrors.join('; ');
     
     modal.render({
         content: orderForm.render({
@@ -205,6 +194,17 @@ events.on('order:open', () => {
             address: buyerData.address
         })
     });
+    
+    // Устанавливаем состояние формы ПОСЛЕ рендеринга в DOM
+    const errors = buyer.validateBuyerData();
+    const orderErrors = [];
+    if (errors.payment) orderErrors.push(errors.payment);
+    if (errors.address) orderErrors.push(errors.address);
+    
+    const isOrderValid = !errors.payment && !errors.address;
+    
+    orderForm.valid = isOrderValid;
+    orderForm.errors = orderErrors.join('; ');
 });
 
 // Изменение формы заказа
@@ -215,17 +215,6 @@ events.on('order:change', (data: { field: keyof typeof buyer, value: string }) =
 // Отправка формы заказа
 events.on('order:submit', () => {
     const buyerData = buyer.getBuyerData();
-    const errors = buyer.validateBuyerData();
-    
-    const contactErrors = [];
-    if (errors.email) contactErrors.push(errors.email);
-    if (errors.phone) contactErrors.push(errors.phone);
-    
-    const isContactValid = !errors.email && !errors.phone;
-    
-    // Устанавливаем состояние формы через сеттеры
-    contactsForm.valid = isContactValid;
-    contactsForm.errors = contactErrors.join('; ');
     
     modal.render({
         content: contactsForm.render({
@@ -233,6 +222,17 @@ events.on('order:submit', () => {
             phone: buyerData.phone
         })
     });
+    
+    // Устанавливаем состояние формы ПОСЛЕ рендеринга в DOM
+    const errors = buyer.validateBuyerData();
+    const contactErrors = [];
+    if (errors.email) contactErrors.push(errors.email);
+    if (errors.phone) contactErrors.push(errors.phone);
+    
+    const isContactValid = !errors.email && !errors.phone;
+    
+    contactsForm.valid = isContactValid;
+    contactsForm.errors = contactErrors.join('; ');
 });
 
 // Изменение формы контактов
